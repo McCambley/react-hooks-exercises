@@ -3,7 +3,12 @@
 
 import * as React from 'react'
 
-function Name({name, onNameChange}) {
+function Name() {
+  const [name, setName] = React.useState('')
+  const onNameChange = e => {
+    console.log('setting name: ', e.target.value)
+    setName(e.target.value)
+  }
   return (
     <div>
       <label htmlFor="name">Name: </label>
@@ -26,7 +31,7 @@ function FavoriteAnimal({animal, onAnimalChange}) {
 
 // 🐨 uncomment this
 function Display({name, animal}) {
-  return <div>{`Hey ${name}, your favorite animal is: ${animal}!`}</div>
+  return <div>{`Your favorite animal is: ${animal}!`}</div>
 }
 
 // 💣 remove this component in favor of the new one
@@ -36,7 +41,6 @@ function Display({name, animal}) {
 
 function App() {
   // 🐨 add a useState for the animal
-  const [name, setName] = React.useState('')
   const [animal, setAnimal] = React.useState('')
 
   const onAnimalChange = e => {
@@ -44,11 +48,11 @@ function App() {
   }
   return (
     <form>
-      <Name name={name} onNameChange={event => setName(event.target.value)} />
+      <Name />
       {/* 🐨 pass the animal and onAnimalChange prop here (similar to the Name component above) */}
       <FavoriteAnimal animal={animal} onAnimalChange={onAnimalChange} />
       {/* 🐨 pass the animal prop here */}
-      <Display name={name} animal={animal} />
+      <Display animal={animal} />
     </form>
   )
 }
