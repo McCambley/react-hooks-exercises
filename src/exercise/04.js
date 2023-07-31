@@ -10,7 +10,6 @@ function Board() {
     'squares',
     Array(9).fill(null),
   )
-  console.log({squares})
 
   // 🐨 We'll need the following bits of derived state:
   // - nextValue ('X' or 'O')
@@ -19,17 +18,8 @@ function Board() {
   // 💰 I've written the calculations for you! So you can use my utilities
   // below to create these variables
   const nextValue = calculateNextValue(squares)
-  console.log({nextValue})
   const winner = calculateWinner(squares)
-  console.log({winner})
   const status = calculateStatus(winner, squares, nextValue)
-  console.log({status})
-
-  // React.useEffect(() => {
-  //   const stringifiedSquares = JSON.stringify(squares)
-  //   console.log('Saving board!')
-  //   localStorage.setItem('squares', stringifiedSquares)
-  // }, [squares])
 
   // This is the function your square click handler will call. `square` should
   // be an index. So if they click the center square, this will be `4`.
