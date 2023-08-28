@@ -10,6 +10,13 @@ function Board() {
     'squares',
     Array(9).fill(null),
   )
+  const [history, setHistory] = useLocalStorageState('history', [
+    {
+      text: 'Go to game start',
+      isCurrent: true,
+      squares: Array(9).fill(null),
+    },
+  ])
 
   // 🐨 We'll need the following bits of derived state:
   // - nextValue ('X' or 'O')
@@ -42,12 +49,34 @@ function Board() {
     //
     // 🐨 set the squares to your copy
     setSquares(squaresCopy)
+    setHistory(previous => {
+      const previousCopy = [...previous]
+      const previousCopyLength = previousCopy.length
+      previousCopy.forEach(i => {
+        i.isCurrent = false
+      })
+      return [
+        ...previousCopy,
+        {
+          isCurrent: true,
+          squares: squaresCopy,
+          text: `Go to move ${previousCopyLength}`,
+        },
+      ]
+    })
   }
 
   function restart() {
     // 🐨 reset the squares
     // 💰 `Array(9).fill(null)` will do it!
     setSquares(Array(9).fill(null))
+    setHistory([
+      {
+        text: 'Go to game start',
+        isCurrent: true,
+        squares: Array(9).fill(null),
+      },
+    ])
   }
 
   function renderSquare(i) {
@@ -60,26 +89,53 @@ function Board() {
 
   return (
     <div>
-      {/* 🐨 put the status in the div below */}
-      <div className="status">{status}</div>
-      <div className="board-row">
-        {renderSquare(0)}
-        {renderSquare(1)}
-        {renderSquare(2)}
+      <div>
+        <div className="board-row">
+          {renderSquare(0)}
+          {renderSquare(1)}
+          {renderSquare(2)}
+        </div>
+        <div className="board-row">
+          {renderSquare(3)}
+          {renderSquare(4)}
+          {renderSquare(5)}
+        </div>
+        <div className="board-row">
+          {renderSquare(6)}
+          {renderSquare(7)}
+          {renderSquare(8)}
+        </div>
+        <button className="restart" onClick={restart}>
+          restart
+        </button>
       </div>
-      <div className="board-row">
-        {renderSquare(3)}
-        {renderSquare(4)}
-        {renderSquare(5)}
+      <div>
+        {/* 🐨 put the status in the div below */}
+        <div className="status">{status}</div>
+        <ol>
+          {history.map((i, index) => {
+            return (
+              <li>
+                <button
+                  disabled={i.isCurrent === true}
+                  onClick={() => {
+                    setSquares(i.squares)
+                    setHistory(previous => {
+                      const previousCopy = previous.map(i => {
+                        return {...i, isCurrent: false}
+                      })
+                      previousCopy[index].isCurrent = true
+                      return previousCopy
+                    })
+                  }}
+                >
+                  {i.text} {i.isCurrent ? '(current)' : ''}
+                </button>
+              </li>
+            )
+          })}
+        </ol>
       </div>
-      <div className="board-row">
-        {renderSquare(6)}
-        {renderSquare(7)}
-        {renderSquare(8)}
-      </div>
-      <button className="restart" onClick={restart}>
-        restart
-      </button>
     </div>
   )
 }
