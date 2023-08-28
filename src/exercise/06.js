@@ -1,5 +1,6 @@
 // useEffect: HTTP requests
 // http://localhost:3000/isolated/exercise/06.js
+import {fetchPokemon, PokemonInfoFallback, PokemonDataView} from '../pokemon'
 
 import * as React from 'react'
 // 🐨 you'll want the following additional things from '../pokemon':
@@ -10,6 +11,7 @@ import {PokemonForm} from '../pokemon'
 
 function PokemonInfo({pokemonName}) {
   // 🐨 Have state for the pokemon (null)
+  const [pokemon, setPokemon] = React.useState(null)
   // 🐨 use React.useEffect where the callback should be called whenever the
   // pokemon name changes.
   // 💰 DON'T FORGET THE DEPENDENCIES ARRAY!
@@ -20,13 +22,30 @@ function PokemonInfo({pokemonName}) {
   //   fetchPokemon('Pikachu').then(
   //     pokemonData => {/* update all the state here */},
   //   )
+  React.useEffect(() => {
+    if (!pokemonName) return
+    setPokemon(null)
+    async function fetchData() {
+      const response = await fetchPokemon(pokemonName)
+      console.log(response)
+      setPokemon(response)
+    }
+    fetchData()
+  }, [pokemonName])
   // 🐨 return the following things based on the `pokemon` state and `pokemonName` prop:
   //   1. no pokemonName: 'Submit a pokemon'
+  if (!pokemonName) {
+    return <p>Submit a pokemon</p>
+  }
+
   //   2. pokemonName but no pokemon: <PokemonInfoFallback name={pokemonName} />
+  if (pokemonName && !pokemon) {
+    return <PokemonInfoFallback name={pokemonName} />
+  }
   //   3. pokemon: <PokemonDataView pokemon={pokemon} />
+  return <PokemonDataView pokemon={pokemon} />
 
   // 💣 remove this
-  return 'TODO'
 }
 
 function App() {
