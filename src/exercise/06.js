@@ -14,7 +14,7 @@ function PokemonInfo({pokemonName}) {
   // const [pokemon, setPokemon] = React.useState(null)
   // const [error, setError] = React.useState(null)
   const [state, setState] = React.useState({
-    status: 'resolved',
+    status: 'idle',
     pokemon: null,
     error: null,
   })
@@ -33,7 +33,7 @@ function PokemonInfo({pokemonName}) {
     setState(prev => {
       return {
         ...prev,
-        status: 'resolved',
+        status: 'pending',
         error: null,
       }
     })
@@ -53,7 +53,7 @@ function PokemonInfo({pokemonName}) {
           setState(prev => {
             return {
               ...prev,
-              status: 'error',
+              status: 'rejected',
               error: err,
             }
           })
@@ -63,7 +63,7 @@ function PokemonInfo({pokemonName}) {
   }, [pokemonName])
   // 🐨 return the following things based on the `pokemon` state and `pokemonName` prop:
 
-  if (state.status === 'error') {
+  if (state.status === 'rejected') {
     return (
       <div role="alert" title="Submit another pokemon">
         There was an error:{' '}
